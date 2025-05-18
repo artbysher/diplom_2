@@ -11,7 +11,10 @@ def generate_user_body():
         "name": str(fake.first_name())
         }
 
-
+def generate_test_data():
+       return [ ("email", str(fake.email())),
+        ("password", str(fake.random_int(min=1000, max=9999))),
+        ("name", "NewName")  ]
 
 def generate_order_body():
     ingr_hash = ["61c0c5a71d1f82001bdaaa78",  # "Кристаллы марсианских альфа-сахаридов",

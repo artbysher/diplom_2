@@ -1,22 +1,17 @@
 import allure
 import pytest
-from faker import Faker
 import data
 
 from methods.user_methods import UsersMethods
+from generators import *
 
-fake = Faker()
 
 class TestDataModificationUser:
 
     @allure.title('Тест на успешное изменение данных авторизованного пользователя')
     @allure.description('Создаем пользователя и проверяем что пользователь может изменить свои данные после авторизации,код 200 и изменилось поле email' )
 
-    @pytest.mark.parametrize("field, new_value", [
-        ("email", str(fake.email())),
-        ("password", str(fake.random_int(min=1000, max=9999))),
-        ("name", "NewName")
-    ])
+    @pytest.mark.parametrize("field, new_value",generate_test_data())
     def test_update_user_field(self, generate_user_data, field, new_value):
         UsersMethods.create_user(generate_user_data[0])
         access_token = UsersMethods.get_user_accessToken(generate_user_data[1], generate_user_data[2])
@@ -30,11 +25,7 @@ class TestDataModificationUser:
 
     @allure.title('Тест на ошибку при изменении данных без авторизации')
     @allure.description('Создаем пользователя и проверяем что получаем ошибку при попытке изменить данные без авторизации,код' )
-    @pytest.mark.parametrize("field, new_value", [
-        ("email", str(fake.email())),
-        ("password", str(fake.random_int(min=1000, max=9999))),
-        ("name", "NewName")
-    ])
+    @pytest.mark.parametrize("field, new_value",generate_test_data())
     def test_update_user_field_without_auth(self, generate_user_data, field, new_value):
             UsersMethods.create_user(generate_user_data[0])
             new_body = generate_user_data[0].copy()
